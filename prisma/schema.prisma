@@ -36,14 +36,16 @@ model User {
 
 // Define the Template model
 model Template {
-  id       Int        @id @default(autoincrement())
-  authorId Int
-  author   User       @relation(fields: [authorId], references: [id])
-  fid      Int
-  form     Form       @relation(fields: [fid], references: [id])
-  likes    Like[]
-  comments Comments[]
-  tags     Tags[]
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  authorId    Int
+  author      User       @relation(fields: [authorId], references: [id])
+  fid         Int
+  form        Form       @relation(fields: [fid], references: [id])
+  likes       Like[]
+  comments    Comments[]
+  tags        Tags[]
 }
 
 // Define the Like model
