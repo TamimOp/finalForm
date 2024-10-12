@@ -1,14 +1,166 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
 
 generator client {
   provider = "prisma-client-js"
 }
 
-datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+// Define ENUMs for Role and FormRole
+enum Role {
+  USER
+  ADMIN
+}
+
+enum FormRole {
+  Creator
+  Editor
+  Viewer
+}
+
+// Define the User model
+model User {
+  id          Int              @id @default(autoincrement())
+  email       String           @unique
+  name        String?
+  role        Role
+  templates   Template[]
+  forms       Form[]
+  permissions FormPermission[]
+  answers     Answers[]
+  password    String
+  Account     Account[]
+  Session     Session[]
+}
+
+// Define the Template model
+model Template {
+  id       Int        @id @default(autoincrement())
+  authorId Int
+  author   User       @relation(fields: [authorId], references: [id])
+  fid      Int
+  form     Form       @relation(fields: [fid], references: [id])
+  likes    Like[]
+  comments Comments[]
+  tags     Tags[]
+}
+
+// Define the Like model
+model Like {
+  id       Int      @id @default(autoincrement())
+  tid      Int
+  template Template @relation(fields: [tid], references: [id])
+  value    Boolean
+}
+
+// Define the Comments model
+model Comments {
+  id       Int      @id @default(autoincrement())
+  tid      Int
+  template Template @relation(fields: [tid], references: [id])
+  text     String
+}
+
+// Define the Tags model
+model Tags {
+  id       Int      @id @default(autoincrement())
+  tid      Int
+  template Template @relation(fields: [tid], references: [id])
+  text     String
+}
+
+// Define the Form model
+model Form {
+  id          Int              @id @default(autoincrement())
+  uid         Int
+  title       String
+  description String
+  user        User             @relation(fields: [uid], references: [id])
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  elements    Element[]
+  permissions FormPermission[]
+  templates   Template[]
+  answers     Answers[]
+}
+
+// Define the Element model
+model Element {
+  id         Int            @id @default(autoincrement())
+  type       Int
+  index      Int
+  fid        Int
+  form       Form           @relation(fields: [fid], references: [id])
+  visible    Boolean
+  selectedId Int?
+  items      ElementItems[]
+  Answers    Answers[]
+}
+
+// Define the ElementItems model
+model ElementItems {
+  id      Int       @id @default(autoincrement())
+  eid     Int
+  element Element   @relation(fields: [eid], references: [id])
+  text    String
+  value   String
+  answers Answers[]
+}
+
+// Define the Answers model
+model Answers {
+  id       Int           @id @default(autoincrement())
+  fid      Int
+  uid      Int
+  eid      Int
+  form     Form          @relation(fields: [fid], references: [id])
+  user     User          @relation(fields: [uid], references: [id])
+  element  Element       @relation(fields: [eid], references: [id])
+  answerId Int?
+  answer   ElementItems? @relation(fields: [answerId], references: [id])
+}
+
+// Define the FormPermission model
+model FormPermission {
+  id   Int      @id @default(autoincrement())
+  fid  Int
+  uid  Int
+  form Form     @relation(fields: [fid], references: [id])
+  user User     @relation(fields: [uid], references: [id])
+  role FormRole
+}
+
+model Account {
+  id                Int     @id @default(autoincrement())
+  userId            Int
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
