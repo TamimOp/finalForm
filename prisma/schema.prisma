@@ -24,7 +24,6 @@ model User {
   id          Int              @id @default(autoincrement())
   email       String           @unique
   name        String?
-  clerkId     String           @unique
   role        Role
   templates   Template[]
   forms       Form[]
