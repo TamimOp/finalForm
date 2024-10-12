@@ -1,11 +1,16 @@
-import { withAuth } from "next-auth/middleware";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 
-export default withAuth({
-  pages: {
-    signIn: "/auth/signin", // Redirect to sign-in page if not authenticated
-  },
+const isProtectedRoute = createRouteMatcher("/dashboard(.*)");
+
+export default clerkMiddleware((auth, req) => {
+  if (isProtectedRoute(req)) auth().protect();
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/template/:path*"], // Paths to protect
+  matcher: [
+    // Skip Next.js internals and all static files, unless found in search params
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always run for API routes
+    "/(api|trpc)(.*)",
+  ],
 };
