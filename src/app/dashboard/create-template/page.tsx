@@ -1,22 +1,43 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 const CreateTemplate = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
   const router = useRouter();
+
+  // Ensure router is only accessed when ready
+  useEffect(() => {
+    if (!router.isReady) return;
+  }, [router.isReady]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await fetch("/api/templates", {
-      method: "POST",
-      body: JSON.stringify({ title, description }),
-      headers: { "Content-Type": "application/json" },
-    });
-    if (res.ok) {
-      router.push("/dashboard");
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/templates", {
+        method: "POST",
+        body: JSON.stringify({ title, description }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (res.ok) {
+        router.push("/dashboard");
+      } else {
+        const errorData = await res.json();
+        setError(errorData.message || "Failed to create template");
+      }
+    } catch {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -30,6 +51,7 @@ const CreateTemplate = () => {
           onChange={(e) => setTitle(e.target.value)}
           className="input input-bordered w-full"
           required
+          disabled={loading}
         />
       </div>
 
@@ -39,11 +61,14 @@ const CreateTemplate = () => {
           value={description}
           onChange={(e) => setDescription(e.target.value)}
           className="textarea textarea-bordered w-full"
+          disabled={loading}
         ></textarea>
       </div>
 
-      <button type="submit" className="btn btn-primary">
-        Create Template
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      <button type="submit" className="btn btn-primary" disabled={loading}>
+        {loading ? "Creating..." : "Create Template"}
       </button>
     </form>
   );
