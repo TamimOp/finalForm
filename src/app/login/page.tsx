@@ -46,7 +46,7 @@ function LoginPage() {
       });
 
       if (response.status === 200) {
-        router.push("/admin");
+        router.push("/dashboard");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
