@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/router";
+import { useState } from "react";
+import { useRouter } from "next/navigation"; // Update to 'next/navigation'
 
 const CreateTemplate = () => {
   const [title, setTitle] = useState("");
@@ -9,12 +9,7 @@ const CreateTemplate = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const router = useRouter();
-
-  // Ensure router is only accessed when ready
-  useEffect(() => {
-    if (!router.isReady) return;
-  }, [router.isReady]);
+  const router = useRouter(); // Using 'next/navigation' version
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

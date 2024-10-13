@@ -29,5 +29,5 @@ export default function HomePage() {
     verifyToken();
   }, [router]);
 
-  return null; // Return null for the component since no JSX is being rendered
+  return null;
 }
