@@ -1,7 +1,7 @@
 "use client";
 import { useState } from "react";
-import TemplatesTab from "../components/TemplatesTab";
-import FilledFormsTab from "../components/TemplatesTab";
+import TemplatesTab from "../../components/TemplatesTab";
+import FilledFormsTab from "../../components/FilledFormsTab";
 import { useRouter } from "next/navigation";
 
 const Dashboard = () => {
