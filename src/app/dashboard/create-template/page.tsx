@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation"; // Update to 'next/navigation'
+import { TextField } from "@mui/material";
+import Button from "@mui/material/Button";
+import TabForm from "@/components/Tabs";
 
 const CreateTemplate = () => {
   const [title, setTitle] = useState("");
@@ -37,35 +40,44 @@ const CreateTemplate = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="container mx-auto px-4 py-8">
-      <div className="mb-4">
-        <label className="block text-gray-700">Template Title</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input input-bordered w-full"
-          required
-          disabled={loading}
-        />
+    <>
+      <TabForm />
+
+      <div className="bg-slate-100">
+        <form className="container mx-auto px-4 py-8 flex flex-col gap-3 justify-center items-center">
+          <div className="flex flex-col gap-3 justify-center items-center">
+            <TextField
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              required
+              disabled={loading}
+              label="Template Title"
+              variant="filled"
+              className="w-[700px]"
+            />
+
+            <TextField
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              disabled={loading}
+              label="Description"
+              variant="filled"
+              size="small"
+              className="w-[700px]"
+            />
+          </div>
+          {error && <p className="text-red-500 mb-4 items-start">{error}</p>}
+          <Button
+            onClick={handleSubmit}
+            variant="contained"
+            disabled={loading}
+            className="items-start"
+          >
+            {loading ? "Creating..." : "Create Template"}
+          </Button>
+        </form>
       </div>
-
-      <div className="mb-4">
-        <label className="block text-gray-700">Description</label>
-        <textarea
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          className="textarea textarea-bordered w-full"
-          disabled={loading}
-        ></textarea>
-      </div>
-
-      {error && <p className="text-red-500 mb-4">{error}</p>}
-
-      <button type="submit" className="btn btn-primary" disabled={loading}>
-        {loading ? "Creating..." : "Create Template"}
-      </button>
-    </form>
+    </>
   );
 };
 
