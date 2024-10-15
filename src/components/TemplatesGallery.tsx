@@ -15,9 +15,9 @@ const TemplatesGallery = () => {
     <div className="bg-gray-100 py-4 lg:py-16">
       <div className="max-w-[1104px] mx-auto">
         <div className="flex flex-wrap justify-between items-center">
-          <div className="text-base text-gray-800">My Templates</div>
+          <div className="text-lg text-gray-800 ">Templates</div>
           <div className="flex items-center space-x-2">
-            <button className="flex items-center text-sm text-gray-700">
+            <button className="flex items-center text-base text-gray-700">
               Template gallery
               <UnfoldMoreSharpIcon fontSize="small" />
             </button>

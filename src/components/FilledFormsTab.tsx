@@ -12,7 +12,7 @@ const FilledFormsTab = () => {
   useEffect(() => {
     const fetchFilledForms = async () => {
       try {
-        const res = await fetch("/api/forms");
+        const res = await fetch("/api/forms/get");
         const data: FilledForm[] = await res.json(); // Ensure data matches the FilledForm[] type
         setFilledForms(data);
       } catch (error) {
@@ -23,8 +23,7 @@ const FilledFormsTab = () => {
   }, []);
 
   return (
-    <div>
-      <h2 className="text-lg font-bold">Filled Forms</h2>
+    <div className="border-1 border-black">
       <ul className="mt-4">
         {filledForms.map((form) => (
           <li key={form.id}>

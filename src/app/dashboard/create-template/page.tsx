@@ -20,7 +20,7 @@ const CreateTemplate = () => {
     setError(null);
 
     try {
-      const res = await fetch("/api/templates", {
+      const res = await fetch("/api/templates/create", {
         method: "POST",
         body: JSON.stringify({ title, description }),
         headers: { "Content-Type": "application/json" },
