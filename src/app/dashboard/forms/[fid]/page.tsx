@@ -24,7 +24,7 @@ function Forms() {
       }
     };
     fetchTemplates();
-  }, []);
+  }, [fid]);
   return (
     <div className="m-8">
       {templates.length > 0 ? (
