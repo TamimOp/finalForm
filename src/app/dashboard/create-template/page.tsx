@@ -27,7 +27,7 @@ const CreateTemplate = () => {
       });
 
       if (res.ok) {
-        router.push("/dashboard");
+        router.push("/dashboard/forms");
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Failed to create template");
