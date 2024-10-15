@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
 
 type Template = {
   id: number;
@@ -9,11 +10,13 @@ type Template = {
 };
 
 function Forms() {
+  const params = useParams();
+  const fid = params.fid;
   const [templates, setTemplates] = useState<Template[]>([]);
   useEffect(() => {
     const fetchTemplates = async () => {
       try {
-        const res = await fetch("/api/templates");
+        const res = await fetch(`/api/forms/${fid}`);
         const data: Template[] = await res.json();
         setTemplates(data);
       } catch (error) {

@@ -23,7 +23,7 @@ export default function RecentForm() {
       </div>
 
       {/* File view layout without logic */}
-      <div className="grid grid-cols-5 gap-4 mt-8">
+      <div className="p-4">
         {/* Example card structure for files */}
         <FilledFormsTab />
       </div>

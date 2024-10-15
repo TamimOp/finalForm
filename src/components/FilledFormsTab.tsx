@@ -23,11 +23,14 @@ const FilledFormsTab = () => {
   }, []);
 
   return (
-    <div className="border-1 border-black">
-      <ul className="mt-4">
+    <div>
+      <ul className="mt-4 flex flex-wrap gap-6">
         {filledForms.map((form) => (
-          <li key={form.id}>
-            <a href={`/dashboard/form/${form.id}`}>{form.title}</a>
+          <li
+            key={form.id}
+            className="border-2 border-black w-[180px] h-[180px]"
+          >
+            <a href={`/dashboard/forms/${form.id}`}>{form.title}</a>
           </li>
         ))}
       </ul>

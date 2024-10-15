@@ -20,14 +20,15 @@ const CreateTemplate = () => {
     setError(null);
 
     try {
-      const res = await fetch("/api/templates/create", {
+      const res = await fetch("/api/forms/create", {
         method: "POST",
         body: JSON.stringify({ title, description }),
         headers: { "Content-Type": "application/json" },
       });
 
       if (res.ok) {
-        router.push("/dashboard/forms");
+        const data = await res.json();
+        router.push(`/dashboard/forms/${data.id}`);
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Failed to create template");
