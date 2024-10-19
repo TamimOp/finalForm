@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"; // Update to 'next/navigation'
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import TabForm from "@/components/Tabs";
-import QuestionBox from "@/components/ConfigureQuesPaper/QuestionBox";
+import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
 
 const CreateTemplate = () => {
   const [title, setTitle] = useState("");
@@ -69,7 +69,7 @@ const CreateTemplate = () => {
             />
           </div>
           <div className="container item-center w-[700px]">
-            <QuestionBox />
+            <QuestionBoxContainer />
           </div>
           {error && <p className="text-red-500 mb-4 items-start">{error}</p>}
           <Button

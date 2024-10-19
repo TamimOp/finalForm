@@ -15,15 +15,22 @@ import Checkbox from "@mui/material/Checkbox";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
-function QuestionBox() {
-  const [age, setAge] = React.useState("");
+function QuestionBox({
+  index,
+  handleDelete,
+}: {
+  index: number;
+  handleDelete: (index: number) => void;
+}) {
+  const [type, setType] = React.useState("");
 
   const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+    setType(event.target.value as string);
   };
+
   return (
     <>
-      <div className="flex flex-col bg-slate-200 p-4 rounded-lg">
+      <section className="flex flex-col bg-slate-200 p-4 rounded-lg mb-4">
         <div className="flex flex-row justify-between">
           <div>
             <Box
@@ -46,8 +53,8 @@ function QuestionBox() {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={age}
-                  label="Age"
+                  value={type}
+                  label="Type"
                   onChange={handleChange}
                 >
                   <MenuItem value={10}>Short answer</MenuItem>
@@ -82,19 +89,45 @@ function QuestionBox() {
           <button>
             <ContentCopyIcon />
           </button>
-          <button>
+          <button onClick={() => handleDelete(index)}>
             <DeleteOutlineIcon />
           </button>
           <span className="border border-gray-400 mr-2 ml-2" />
           <FormControlLabel required control={<Switch />} label="Required" />
         </div>
-      </div>
+      </section>
+    </>
+  );
+}
+
+export default function QuestionBoxContainer() {
+  const [sections, setSections] = React.useState<number[]>([1]); // Start with one section
+
+  const addSection = () => {
+    setSections((prev) => [...prev, prev.length + 1]); // Add new section by increasing the array size
+  };
+
+  const deleteSection = (index: number) => {
+    setSections((prev) => prev.filter((_, i) => i !== index)); // Remove the section by filtering it out
+  };
+
+  return (
+    <>
+      {sections.map((_, index) => (
+        <QuestionBox key={index} index={index} handleDelete={deleteSection} />
+      ))}
+
       <div className="flex-col pr-2">
         <Box
           sx={{ "& > :not(style)": { m: 1 } }}
           className="flex gap-3 justify-end"
         >
-          <Fab size="small" color="primary" aria-label="add">
+          <Fab
+            size="small"
+            color="primary"
+            aria-label="add"
+            onClick={addSection}
+          >
             <AddIcon />
           </Fab>
         </Box>
@@ -102,5 +135,3 @@ function QuestionBox() {
     </>
   );
 }
-
-export default QuestionBox;
