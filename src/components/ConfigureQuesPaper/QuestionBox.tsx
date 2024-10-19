@@ -11,6 +11,9 @@ import Fab from "@mui/material/Fab";
 import AddIcon from "@mui/icons-material/Add";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
+import Checkbox from "@mui/material/Checkbox";
+
+const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
 function QuestionBox() {
   const [age, setAge] = React.useState("");
@@ -49,15 +52,30 @@ function QuestionBox() {
                 >
                   <MenuItem value={10}>Short answer</MenuItem>
                   <MenuItem value={20}>Paragraph</MenuItem>
-                  <MenuItem value={30}>Checkboxes</MenuItem>
+                  <MenuItem value={30}>Integers</MenuItem>
+                  <MenuItem value={40}>Checkboxes</MenuItem>
                 </Select>
               </FormControl>
             </Box>
           </div>
         </div>
         <div>
-          <div>Option</div>
-          <div>Add Option</div>
+          <div>
+            <TextField
+              id="standard-basic"
+              label="short answer text"
+              variant="standard"
+            />
+          </div>
+          <div>
+            <Checkbox {...label} className="mt-3" />
+            <TextField
+              id="standard-basic"
+              label="option"
+              variant="standard"
+              className="text-center"
+            />
+          </div>
         </div>
         <hr />
         <div className="flex gap-3 justify-end">
@@ -67,13 +85,19 @@ function QuestionBox() {
           <button>
             <DeleteOutlineIcon />
           </button>
+          <span className="border border-gray-400 mr-2 ml-2" />
           <FormControlLabel required control={<Switch />} label="Required" />
-          <Box sx={{ "& > :not(style)": { m: 1 } }}>
-            <Fab size="small" color="primary" aria-label="add">
-              <AddIcon />
-            </Fab>
-          </Box>
         </div>
+      </div>
+      <div className="flex-col pr-2">
+        <Box
+          sx={{ "& > :not(style)": { m: 1 } }}
+          className="flex gap-3 justify-end"
+        >
+          <Fab size="small" color="primary" aria-label="add">
+            <AddIcon />
+          </Fab>
+        </Box>
       </div>
     </>
   );
