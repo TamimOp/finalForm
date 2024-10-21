@@ -15,6 +15,7 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -32,6 +33,7 @@ function QuestionBox({
   const [type, setType] = useState(1);
   const [isRequired, setIsRequired] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(index);
+  const [fields, setFields] = useState([{ id: 1 }]);
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
   const [text3, setText3] = useState("");
@@ -61,6 +63,34 @@ function QuestionBox({
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(Number(event.target.value));
+    setFields([{ id: 1 }]); // Reset fields when changing type
+  };
+
+  const addField = () => {
+    if (fields.length < 4) {
+      setFields([...fields, { id: fields.length + 1 }]);
+    }
+  };
+
+  const removeField = (id: number) => {
+    setFields(fields.filter((field) => field.id !== id));
+  };
+
+  const handleTextChange = (id: number, value: string) => {
+    switch (id) {
+      case 1:
+        setText1(value);
+        break;
+      case 2:
+        setText2(value);
+        break;
+      case 3:
+        setText3(value);
+        break;
+      case 4:
+        setText4(value);
+        break;
+    }
   };
 
   return (
@@ -100,45 +130,64 @@ function QuestionBox({
         </div>
         <div>
           <div>
-            {type === 1 && (
-              <TextField
-                id="standard-basic"
-                label="Short Answer"
-                variant="standard"
-              />
-            )}
-            {type === 2 && (
-              <TextField
-                id="standard-basic"
-                label="Paragraph"
-                variant="standard"
-                multiline
-                rows={4}
-              />
-            )}
-            {type === 3 && (
-              <TextField
-                id="standard-basic"
-                label="Integer"
-                type="number"
-                variant="standard"
-              />
-            )}
-            {type === 4 && (
-              <>
-                <Checkbox {...label} className="mt-3" />
-                <TextField
-                  id="standard-basic"
-                  label="option"
-                  variant="standard"
-                  onChange={(e: any) => setText1(e.target.value)}
-                  className="text-center"
-                />
-              </>
+            {fields.map((field) => (
+              <div key={field.id} className="flex items-center gap-2 mt-2">
+                {type === 1 && (
+                  <TextField
+                    id="standard-basic"
+                    label="Short Answer"
+                    variant="standard"
+                    className="w-[50%]"
+                  />
+                )}
+                {type === 2 && (
+                  <TextField
+                    id="standard-basic"
+                    label="Paragraph"
+                    variant="standard"
+                    multiline
+                    rows={2}
+                    className="w-[70%]"
+                  />
+                )}
+                {type === 3 && (
+                  <TextField
+                    id="standard-basic"
+                    label="Integer"
+                    type="number"
+                    variant="standard"
+                  />
+                )}
+                {type === 4 && (
+                  <>
+                    <Checkbox {...label} className="mt-4" />
+                    <TextField
+                      id="standard-basic"
+                      label={`Option ${field.id}`}
+                      variant="standard"
+                      onChange={(e) =>
+                        handleTextChange(field.id, e.target.value)
+                      }
+                      className="w-[40%]"
+                    />
+                  </>
+                )}
+                {field.id !== 1 && (
+                  <ClearIcon onClick={() => removeField(field.id)} />
+                )}
+              </div>
+            ))}
+            {fields.length < 4 && (
+              <div
+                className="flex justify-start mt-4 cursor-pointer w-fit"
+                onClick={addField}
+              >
+                <AddIcon />
+                <p>Add Option</p>
+              </div>
             )}
           </div>
         </div>
-        <hr />
         <div className="flex gap-3 justify-end">
           <button>
             <ContentCopyIcon />
@@ -148,9 +197,11 @@ function QuestionBox({
           </button>
           <span className="border border-gray-400 mr-2 ml-2" />
           <FormControlLabel
-            required={isRequired}
             control={
-              <Switch onChange={(e) => setIsRequired(e.target.checked)} />
+              <Switch
+                onChange={(e) => setIsRequired(e.target.checked)}
+                checked={isRequired}
+              />
             }
             label="Required"
           />
@@ -161,7 +212,7 @@ function QuestionBox({
 }
 
 export default function QuestionBoxContainer({ setElements }: any) {
-  const [sections, setSections] = React.useState<number[]>([1]);
+  const [sections, setSections] = useState<number[]>([1]);
 
   const addSection = () => {
     setSections((prev) => [...prev, prev.length + 1]);
