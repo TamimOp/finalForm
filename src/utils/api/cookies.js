@@ -1,6 +1,6 @@
 import { serialize } from "cookie";
 
-export function createCookie(token, maxAge = 60 * 60) {
+export function createCookie(token, maxAge = 60 * 60 * 24) {
   return serialize("authToken", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",

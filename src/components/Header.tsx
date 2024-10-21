@@ -1,14 +1,16 @@
 "use client";
+import { useUserStore } from "@/store/user-store";
 import AppsIcon from "@mui/icons-material/Apps";
 import SearchIcon from "@mui/icons-material/Search";
-import { IconButton, Avatar, Menu, MenuItem } from "@mui/material";
-import React, { useState, useEffect } from "react";
+import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import useRouter
+import React, { useState } from "react";
 
 export const Header = () => {
+  const user = useUserStore((state: any) => state.user);
+  const setUser = useUserStore((state: any) => state.setUser);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Track login state
   const open = Boolean(anchorEl);
   const router = useRouter();
 
@@ -29,19 +31,19 @@ export const Header = () => {
   };
 
   // Handle logout functionality
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    sessionStorage.removeItem("token");
-    setIsLoggedIn(false); // Update login state to false
+  const handleLogout = async () => {
+    await fetch("/api/auth/logout", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    setUser(undefined);
     router.push("/login");
   };
 
-  // Check login status when component mounts
-  useEffect(() => {
-    const token =
-      localStorage.getItem("token") || sessionStorage.getItem("token");
-    setIsLoggedIn(!!token); // Update login state based on token presence
-  }, []);
+  console.log(user);
 
   return (
     <>
@@ -95,7 +97,7 @@ export const Header = () => {
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleClose}>Settings</MenuItem>
             {/* Show Login or Logout based on login state */}
-            {isLoggedIn ? (
+            {user ? (
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             ) : (
               <MenuItem onClick={handleLoginClick}>Login</MenuItem>

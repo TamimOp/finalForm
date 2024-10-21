@@ -1,10 +1,9 @@
 "use client";
 
 import axios, { AxiosError } from "axios";
-import { useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
+import { redirect } from "next/navigation";
+import { FormEvent, useState } from "react";
 
-// Define a type for the expected error response structure
 type ErrorResponse = {
   message: string;
 };
@@ -14,7 +13,6 @@ function LoginPage() {
   const [password, setPassword] = useState<string>("");
   const [isRegistering, setIsRegistering] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
-  const router = useRouter();
 
   const handleRegister = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,7 +24,8 @@ function LoginPage() {
       });
 
       if (response.status === 200) {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
+        redirect("/dashboard");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;
@@ -46,7 +45,8 @@ function LoginPage() {
       });
 
       if (response.status === 200) {
-        router.push("/dashboard");
+        window.location.href = "/dashboard";
+        redirect("/dashboard");
       }
     } catch (error) {
       const axiosError = error as AxiosError<ErrorResponse>;

@@ -1,17 +1,18 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation"; // Update to 'next/navigation'
+import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
+import TabForm from "@/components/Tabs";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import TabForm from "@/components/Tabs";
-import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
+import { useRouter } from "next/navigation"; // Update to 'next/navigation'
+import { useState } from "react";
 
 const CreateTemplate = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [elements, setElements] = useState([]);
 
   const router = useRouter(); // Using 'next/navigation' version
 
@@ -23,13 +24,13 @@ const CreateTemplate = () => {
     try {
       const res = await fetch("/api/forms/create", {
         method: "POST",
-        body: JSON.stringify({ title, description }),
+        body: JSON.stringify({ title, description, elements }),
         headers: { "Content-Type": "application/json" },
       });
 
       if (res.ok) {
         const data = await res.json();
-        router.push(`/dashboard/forms/${data.id}`);
+        router.push(`/dashboard/forms/${data.form.id}`);
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Failed to create template");
@@ -69,7 +70,7 @@ const CreateTemplate = () => {
             />
           </div>
           <div className="container item-center w-[700px]">
-            <QuestionBoxContainer />
+            <QuestionBoxContainer setElements={setElements} />
           </div>
           {error && <p className="text-red-500 mb-4 items-start">{error}</p>}
           <Button

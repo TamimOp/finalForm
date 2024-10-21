@@ -7,7 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-// Define ENUMs for Role and FormRole
 enum Role {
   USER
   ADMIN
@@ -19,7 +18,6 @@ enum FormRole {
   Viewer
 }
 
-// Define the User model
 model User {
   id          Int              @id @default(autoincrement())
   email       String           @unique
@@ -34,7 +32,6 @@ model User {
   Session     Session[]
 }
 
-// Define the Template model
 model Template {
   id          Int        @id @default(autoincrement())
   title       String
@@ -48,7 +45,6 @@ model Template {
   tags        Tags[]
 }
 
-// Define the Like model
 model Like {
   id       Int      @id @default(autoincrement())
   tid      Int
@@ -56,7 +52,6 @@ model Like {
   value    Boolean
 }
 
-// Define the Comments model
 model Comments {
   id       Int      @id @default(autoincrement())
   tid      Int
@@ -64,7 +59,6 @@ model Comments {
   text     String
 }
 
-// Define the Tags model
 model Tags {
   id       Int      @id @default(autoincrement())
   tid      Int
@@ -72,12 +66,12 @@ model Tags {
   text     String
 }
 
-// Define the Form model
 model Form {
   id          Int              @id @default(autoincrement())
   uid         Int
   title       String
   description String
+  image       String?
   user        User             @relation(fields: [uid], references: [id])
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -87,43 +81,32 @@ model Form {
   answers     Answers[]
 }
 
-// Define the Element model
 model Element {
-  id         Int            @id @default(autoincrement())
-  type       Int
-  index      Int
-  fid        Int
-  form       Form           @relation(fields: [fid], references: [id])
-  visible    Boolean
-  selectedId Int?
-  items      ElementItems[]
-  Answers    Answers[]
+  id       Int       @id @default(autoincrement())
+  type     Int
+  index    Int
+  fid      Int
+  question String
+  form     Form      @relation(fields: [fid], references: [id])
+  required Boolean   @default(false)
+  text1    String?
+  text2    String?
+  text3    String?
+  text4    String?
+  Answers  Answers[]
 }
 
-// Define the ElementItems model
-model ElementItems {
-  id      Int       @id @default(autoincrement())
-  eid     Int
-  element Element   @relation(fields: [eid], references: [id])
-  text    String
-  value   String
-  answers Answers[]
-}
-
-// Define the Answers model
 model Answers {
-  id       Int           @id @default(autoincrement())
+  id       Int     @id @default(autoincrement())
   fid      Int
   uid      Int
   eid      Int
-  form     Form          @relation(fields: [fid], references: [id])
-  user     User          @relation(fields: [uid], references: [id])
-  element  Element       @relation(fields: [eid], references: [id])
-  answerId Int?
-  answer   ElementItems? @relation(fields: [answerId], references: [id])
+  selected Int?
+  form     Form    @relation(fields: [fid], references: [id])
+  user     User    @relation(fields: [uid], references: [id])
+  element  Element @relation(fields: [eid], references: [id])
 }
 
-// Define the FormPermission model
 model FormPermission {
   id   Int      @id @default(autoincrement())
   fid  Int

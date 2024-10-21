@@ -7,14 +7,17 @@ const prisma = new PrismaClient();
 const formElement = async (uid: string | number) => {
   const id = Number(uid);
 
-  const elements = await prisma.element.findMany({
-    where: { id },
-  });
-  const forms = await prisma.form.findFirst({
+  const form = await prisma.form.findFirst({
     where: { id },
   });
 
-  return { data: { elements, forms }, key: "data" };
+  const fid = form?.id || 0;
+
+  const elements = await prisma.element.findMany({
+    where: { fid },
+  });
+
+  return { data: { elements, form }, key: "data" };
 };
 
 export async function GET(
