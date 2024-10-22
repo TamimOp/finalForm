@@ -8,7 +8,6 @@ import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Fab from "@mui/material/Fab";
 import FormControl from "@mui/material/FormControl";
-import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -16,6 +15,8 @@ import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
 import React, { useEffect, useState } from "react";
 import ClearIcon from "@mui/icons-material/Clear";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -23,10 +24,12 @@ function QuestionBox({
   index,
   handleDelete,
   handleUpdate,
+  provided,
 }: {
   index: number;
   handleDelete: (index: number) => void;
   handleUpdate: (item: any) => void;
+  provided: any;
 }) {
   const [question, setQuestion] = useState("");
   const debouncedQuestion = useDebounce(question);
@@ -63,7 +66,7 @@ function QuestionBox({
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(Number(event.target.value));
-    setFields([{ id: 1 }]); // Reset fields when changing type
+    setFields([{ id: 1 }]);
   };
 
   const addField = () => {
@@ -94,120 +97,122 @@ function QuestionBox({
   };
 
   return (
-    <>
-      <section className="flex flex-col bg-slate-200 p-4 rounded-lg mb-4">
-        <div className="flex flex-row justify-between">
-          <div>
-            <Box sx={{ "& > :not(style)": { width: 500, maxWidth: "100%" } }}>
-              <TextField
-                id="standard-basic"
-                label="Question"
-                variant="standard"
-                value={question}
-                onChange={(e) => setQuestion(e.target.value)}
-              />
-            </Box>
-          </div>
-          <div>
-            <Box sx={{ minWidth: 120 }}>
-              <FormControl fullWidth>
-                <InputLabel id="demo-simple-select-label">Type</InputLabel>
-                <Select
-                  labelId="demo-simple-select-label"
-                  id="demo-simple-select"
-                  value={`${type}`}
-                  label="Type"
-                  onChange={handleChange}
-                >
-                  <MenuItem value={1}>Short answer</MenuItem>
-                  <MenuItem value={2}>Paragraph</MenuItem>
-                  <MenuItem value={3}>Integers</MenuItem>
-                  <MenuItem value={4}>Checkboxes</MenuItem>
-                </Select>
-              </FormControl>
-            </Box>
-          </div>
+    <section className="flex flex-col bg-slate-200 p-4 rounded-lg mb-4">
+      <div
+        {...provided.dragHandleProps}
+        className="cursor-grab flex items-center justify-center rounded-t-lg"
+      >
+        <span className="mb-2">☰</span>
+      </div>
+      <div className="flex flex-row justify-between">
+        <div>
+          <Box sx={{ "& > :not(style)": { width: 500, maxWidth: "100%" } }}>
+            <TextField
+              id="standard-basic"
+              label="Question"
+              variant="standard"
+              value={question}
+              onChange={(e) => setQuestion(e.target.value)}
+            />
+          </Box>
         </div>
         <div>
-          <div>
-            {fields.map((field) => (
-              <div key={field.id} className="flex items-center gap-2 mt-2">
-                {type === 1 && (
-                  <TextField
-                    id="standard-basic"
-                    label="Short Answer"
-                    variant="standard"
-                    className="w-[50%]"
-                  />
-                )}
-                {type === 2 && (
-                  <TextField
-                    id="standard-basic"
-                    label="Paragraph"
-                    variant="standard"
-                    multiline
-                    rows={2}
-                    className="w-[70%]"
-                  />
-                )}
-                {type === 3 && (
-                  <TextField
-                    id="standard-basic"
-                    label="Integer"
-                    type="number"
-                    variant="standard"
-                  />
-                )}
-                {type === 4 && (
-                  <>
-                    <Checkbox {...label} className="mt-4" />
-                    <TextField
-                      id="standard-basic"
-                      label={`Option ${field.id}`}
-                      variant="standard"
-                      onChange={(e) =>
-                        handleTextChange(field.id, e.target.value)
-                      }
-                      className="w-[40%]"
-                    />
-                  </>
-                )}
-                {field.id !== 1 && (
-                  <ClearIcon onClick={() => removeField(field.id)} />
-                )}
-              </div>
-            ))}
-            {fields.length < 4 && (
-              <div
-                className="flex justify-start mt-4 cursor-pointer w-fit"
-                onClick={addField}
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={`${type}`}
+                label="Type"
+                onChange={handleChange}
               >
-                <AddIcon />
-                <p>Add Option</p>
-              </div>
-            )}
-          </div>
+                <MenuItem value={1}>Short answer</MenuItem>
+                <MenuItem value={2}>Paragraph</MenuItem>
+                <MenuItem value={3}>Integers</MenuItem>
+                <MenuItem value={4}>Checkboxes</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
         </div>
-        <div className="flex gap-3 justify-end">
-          <button>
-            <ContentCopyIcon />
-          </button>
-          <button onClick={() => handleDelete(index)}>
-            <DeleteOutlineIcon />
-          </button>
-          <span className="border border-gray-400 mr-2 ml-2" />
-          <FormControlLabel
-            control={
-              <Switch
-                onChange={(e) => setIsRequired(e.target.checked)}
-                checked={isRequired}
-              />
-            }
-            label="Required"
-          />
+      </div>
+      <div>
+        <div>
+          {fields.map((field) => (
+            <div key={field.id} className="flex items-center gap-2 mt-2">
+              {type === 1 && (
+                <TextField
+                  id="standard-basic"
+                  label="Short Answer"
+                  variant="standard"
+                  className="w-[50%]"
+                />
+              )}
+              {type === 2 && (
+                <TextField
+                  id="standard-basic"
+                  label="Paragraph"
+                  variant="standard"
+                  multiline
+                  rows={2}
+                  className="w-[70%]"
+                />
+              )}
+              {type === 3 && (
+                <TextField
+                  id="standard-basic"
+                  label="Integer"
+                  type="number"
+                  variant="standard"
+                />
+              )}
+              {type === 4 && (
+                <>
+                  <Checkbox {...label} className="mt-4" />
+                  <TextField
+                    id="standard-basic"
+                    label={`Option ${field.id}`}
+                    variant="standard"
+                    onChange={(e) => handleTextChange(field.id, e.target.value)}
+                    className="w-[40%]"
+                  />
+                </>
+              )}
+              {field.id !== 1 && (
+                <ClearIcon onClick={() => removeField(field.id)} />
+              )}
+            </div>
+          ))}
+          {fields.length < 4 && (
+            <div
+              className="flex justify-start mt-4 cursor-pointer w-fit"
+              onClick={addField}
+            >
+              <AddIcon />
+              <p>Add Option</p>
+            </div>
+          )}
         </div>
-      </section>
-    </>
+      </div>
+      <div className="flex gap-3 justify-end">
+        <button>
+          <ContentCopyIcon />
+        </button>
+        <button onClick={() => handleDelete(index)}>
+          <DeleteOutlineIcon />
+        </button>
+        <span className="border border-gray-400 mr-2 ml-2" />
+        <FormControlLabel
+          control={
+            <Switch
+              onChange={(e) => setIsRequired(e.target.checked)}
+              checked={isRequired}
+            />
+          }
+          label="Required"
+        />
+      </div>
+    </section>
   );
 }
 
@@ -230,31 +235,61 @@ export default function QuestionBoxContainer({ setElements }: any) {
     });
   };
 
+  const onDragEnd = (result: any) => {
+    const { destination, source } = result;
+
+    if (!destination) return;
+
+    if (
+      destination.index === source.index &&
+      destination.droppableId === source.droppableId
+    ) {
+      return;
+    }
+
+    const reorderedSections = Array.from(sections);
+    const [moved] = reorderedSections.splice(source.index, 1);
+    reorderedSections.splice(destination.index, 0, moved);
+    setSections(reorderedSections);
+  };
+
   return (
     <>
-      {sections.map((_, index) => (
-        <QuestionBox
-          key={index}
-          index={index}
-          handleDelete={deleteSection}
-          handleUpdate={handleUpdate}
-        />
-      ))}
-
-      <div className="flex-col pr-2">
-        <Box
-          sx={{ "& > :not(style)": { m: 1 } }}
-          className="flex gap-3 justify-end"
-        >
-          <Fab
-            size="small"
-            color="primary"
-            aria-label="add"
-            onClick={addSection}
-          >
-            <AddIcon />
-          </Fab>
-        </Box>
+      <DragDropContext onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable-sections">
+          {(provided) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className="space-y-4"
+            >
+              {sections.map((section, index) => (
+                <Draggable
+                  key={`section-${section}`}
+                  draggableId={`section-${section}`}
+                  index={index}
+                >
+                  {(provided) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps}>
+                      <QuestionBox
+                        index={index}
+                        handleDelete={deleteSection}
+                        handleUpdate={handleUpdate}
+                        provided={provided}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+      <div className="flex justify-end">
+        <Fab size="small" color="primary" aria-label="add" onClick={addSection}>
+          <AddIcon />
+        </Fab>
       </div>
     </>
   );
