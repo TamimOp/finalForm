@@ -22,9 +22,7 @@ export default function RecentForm() {
         </div>
       </div>
 
-      {/* File view layout without logic */}
       <div className="p-4">
-        {/* Example card structure for files */}
         <FilledFormsTab />
       </div>
     </div>

@@ -25,13 +25,12 @@ export async function GET(req: Request) {
       throw new Error("Invalid token format");
     }
 
-    // Fetch all forms for the user with the id decoded from the token
     const userForms = await prisma.form.findMany({
       where: {
         uid: decoded.id,
       },
       include: {
-        elements: true, // Include elements related to each form if necessary
+        elements: true,
       },
     });
 
