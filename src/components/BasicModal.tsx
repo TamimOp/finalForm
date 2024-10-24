@@ -95,7 +95,7 @@ export default function BasicModal({ form }: any) {
           <h1>Selected Email</h1>
           <SelectButton share={share} setShare={setShare} />
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Link: {`/dashboard/forms/${form.id}`}
+            Link: {`https://final-form-five.vercel.app/dashboard/${form.id}`}
           </Typography>
           <div className="flex gap-2 justify-end">
             <Button onClick={handleClose}>Close</Button>
