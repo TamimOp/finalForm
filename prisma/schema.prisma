@@ -72,6 +72,7 @@ model Form {
   title       String
   description String
   image       String?
+  permission  Int              @default(1)
   user        User             @relation(fields: [uid], references: [id], onDelete: Cascade)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
@@ -116,10 +117,10 @@ model Answers {
 }
 
 model FormPermission {
-  id   Int      @id @default(autoincrement())
-  fid  Int
-  uid  Int
-  form Form     @relation(fields: [fid], references: [id], onDelete: Cascade)
-  user User     @relation(fields: [uid], references: [id], onDelete: Cascade)
-  role FormRole
+  id    Int      @id @default(autoincrement())
+  fid   Int
+  email String
+  form  Form     @relation(fields: [fid], references: [id], onDelete: Cascade)
+  user  User     @relation(fields: [email], references: [email], onDelete: Cascade)
+  role  FormRole
 }

@@ -1,6 +1,6 @@
 "use client";
-import UnfoldMoreSharpIcon from "@mui/icons-material/UnfoldMoreSharp";
 import MoreVertSharpIcon from "@mui/icons-material/MoreVertSharp";
+import UnfoldMoreSharpIcon from "@mui/icons-material/UnfoldMoreSharp";
 import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
@@ -11,6 +11,7 @@ const TemplatesGallery = () => {
   const handleBlankFormClick = () => {
     router.push("/dashboard/create-template");
   };
+
   const handleTemplateClick = () => {
     router.push(`/dashboard/forms/edit`);
   };

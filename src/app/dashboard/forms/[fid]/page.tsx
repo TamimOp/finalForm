@@ -52,12 +52,23 @@ function Forms() {
   const fid = params.fid;
   const [formData, setFormData] = useState<TemplateData | null>(null);
   const [answers, setAnswers] = useState<Answer[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTemplates = async () => {
+      setLoading(true);
+      setError(null);
+
       try {
         const res = await fetch(`/api/forms/${fid}`);
         const data = await res.json();
+
+        if (data && data.msg) {
+          setError(data.msg);
+          setLoading(false);
+          return;
+        }
 
         if (data && data.data) {
           const sortedElements = data.data.elements.sort(
@@ -67,15 +78,21 @@ function Forms() {
           setFormData(data.data);
         } else {
           console.error("Unexpected response structure:", data);
+          setError(data);
         }
       } catch (error) {
         console.error("Error fetching templates:", error);
+        setError("An error occurred. Please try again.");
+      } finally {
+        setLoading(false);
       }
     };
     fetchTemplates();
   }, [fid]);
 
-  const handleAnswerSubmit = (id: number, answer: string) => {};
+  if (loading) {
+    return <p className="text-gray-500">Loading...</p>;
+  }
 
   return (
     <div className="bg-slate-100">
@@ -109,7 +126,13 @@ function Forms() {
           </div>
         </>
       ) : (
-        <p className="text-gray-500">Loading...</p>
+        <>
+          {error ? (
+            <p className="text-gray-500">{error}</p>
+          ) : (
+            <p className="text-gray-500">No Form Found!</p>
+          )}
+        </>
       )}
     </div>
   );

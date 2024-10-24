@@ -1,17 +1,10 @@
-import * as React from "react";
 import Box from "@mui/material/Box";
+import FormControl from "@mui/material/FormControl";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
+import Select from "@mui/material/Select";
 
-export default function SelectButton() {
-  const [share, setShare] = React.useState("");
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setShare(event.target.value as string);
-  };
-
+export default function SelectButton({ share, setShare }: any) {
   return (
     <Box sx={{ minWidth: 120 }}>
       <FormControl fullWidth>
@@ -19,9 +12,9 @@ export default function SelectButton() {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value={share}
+          value={`${share}`}
           label="Share"
-          onChange={handleChange}
+          onChange={(e: any) => setShare(Number(e.target.value))}
         >
           <MenuItem value={1}>Restricted</MenuItem>
           <MenuItem value={2}>Public</MenuItem>

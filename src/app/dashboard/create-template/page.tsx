@@ -33,7 +33,7 @@ const CreateTemplate = () => {
 
       if (res.ok) {
         const data = await res.json();
-        router.push(`/dashboard/forms/${data.form.id}`);
+        router.push(`/dashboard/forms/${data.form.id}/edit`);
       } else {
         const errorData = await res.json();
         setError(errorData.message || "Failed to create template");

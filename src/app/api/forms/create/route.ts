@@ -30,6 +30,14 @@ async function createForm(req: Request) {
     })),
   });
 
+  await prisma.formPermission.create({
+    data: {
+      email: decoded.email,
+      fid: Number(newForm.id),
+      role: "Creator",
+    },
+  });
+
   return {
     data: {
       form: newForm,

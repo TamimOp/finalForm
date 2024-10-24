@@ -4,10 +4,8 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
-import Button from "@mui/material/Button";
 import TabForm from "@/components/Tabs";
-
-const label = { inputProps: { "aria-label": "Checkbox demo" } };
+import Button from "@mui/material/Button";
 
 type Element = {
   id: number;
@@ -33,29 +31,15 @@ type Form = {
   updatedAt: string;
 };
 
-type TemplateData = {
-  elements: Element[];
-  form: Form;
-};
-
-function Edit({
-  index,
-  handleDelete,
-  handleUpdate,
-  provided,
-}: {
-  index: number;
-  handleDelete: (index: number) => void;
-  handleUpdate: (item: any) => void;
-  provided: any;
-}) {
+export default function Edit() {
   const params = useParams();
   const fid = params.fid;
+  const [form, setForm] = useState<any>(null);
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState("");
   const [elements, setElements] = useState([]);
-  const [fetchLoading, setFetchLoading] = useState(false);
-  const [updateLoading, setUpdateLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [updateLoading, setUpdateLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -66,7 +50,15 @@ function Edit({
         const res = await fetch(`/api/forms/${fid}`);
         const data = await res.json();
 
+        if (data && data.msg) {
+          setError(data.msg);
+          setFetchLoading(false);
+          return;
+        }
+
         if (data && data.data) {
+          setForm(data.data.form);
+
           setTitle(data.data.form.title);
           setDescription(data.data.form.description);
 
@@ -117,10 +109,18 @@ function Edit({
     }
   };
 
+  if (fetchLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <p className="text-red-500 mb-4 items-start">{error}</p>;
+  }
+
   return (
     <div className="bg-slate-100">
       <form className="container mx-auto px-4 py-8 flex flex-col gap-3 justify-center items-center ">
-        <TabForm />
+        <TabForm form={form} />
         <div className="flex flex-col gap-3 justify-center items-center">
           <TextField
             value={title}
@@ -142,6 +142,7 @@ function Edit({
             className="w-[700px]"
           />
         </div>
+
         <div className="container item-center w-[700px]">
           {!fetchLoading && (
             <QuestionBoxContainer
@@ -150,18 +151,15 @@ function Edit({
             />
           )}
         </div>
-        {error && <p className="text-red-500 mb-4 items-start">{error}</p>}
         <Button
           onClick={handleSubmit}
           variant="contained"
           disabled={fetchLoading}
           className="items-start"
         >
-          {updateLoading ? "Updating..." : "Update Template"}
+          {updateLoading ? "Update Template" : "Updating..."}
         </Button>
       </form>
     </div>
   );
 }
-
-export default Edit;

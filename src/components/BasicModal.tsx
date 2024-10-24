@@ -1,10 +1,9 @@
-import * as React from "react";
+import { TextField } from "@mui/material";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
-import { useParams } from "next/navigation";
-import { TextField } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import React, { useEffect } from "react";
 import SelectButton from "./SelectButton";
 
 const style = {
@@ -19,12 +18,66 @@ const style = {
   p: 4,
 };
 
-export default function BasicModal() {
+export default function BasicModal({ form }: any) {
+  const [loading, setLoading] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null);
+  const [email, setEmail] = React.useState("");
+  const [share, setShare] = React.useState(-1);
   const [open, setOpen] = React.useState(false);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const params = useParams();
-  const fid = params.fid;
+
+  useEffect(() => {
+    if (form) {
+      setShare(form.permission);
+    }
+  }, [form]);
+
+  const handleShare = async () => {
+    setLoading(true);
+    setError(null);
+
+    try {
+      const res = await fetch(`/api/forms/${form.id}/share`, {
+        method: "POST",
+        body: JSON.stringify({
+          email,
+          form,
+          permissionValue: share,
+        }),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        setError(errorData.message || "Failed to update form permission");
+      }
+    } catch {
+      setError("An error occurred. Please try again.");
+    } finally {
+      setLoading(false);
+      handleClose();
+    }
+  };
+
+  if (share === -1) {
+    return (
+      <div className="mt-1.5">
+        <Button onClick={handleOpen} className="text-gray-600">
+          Share
+        </Button>
+        <Modal open={open} onClose={handleClose}>
+          <Box sx={style} className="flex flex-col gap-8">
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Loading...
+            </Typography>
+            <Button onClick={handleClose}>Close</Button>
+          </Box>
+        </Modal>
+      </div>
+    );
+  }
 
   return (
     <div className="mt-1.5">
@@ -38,12 +91,16 @@ export default function BasicModal() {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style} className="flex flex-col gap-8">
-          <TextField id="demo-helper-text-misaligned-no-helper" label="Email" />
+          <TextField label="Email" onChange={(e) => setEmail(e.target.value)} />
           <h1>Selected Email</h1>
-          <SelectButton />
+          <SelectButton share={share} setShare={setShare} />
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Link: {`/dashboard/forms/${fid}`}
+            Link: {`/dashboard/forms/${form.id}`}
           </Typography>
+          <div className="flex gap-2 justify-end">
+            <Button onClick={handleClose}>Close</Button>
+            <Button onClick={handleShare}>Share</Button>
+          </div>
         </Box>
       </Modal>
     </div>
