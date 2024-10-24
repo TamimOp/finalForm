@@ -28,8 +28,8 @@ model User {
   permissions FormPermission[]
   answers     Answers[]
   password    String
-  Account     Account[]
-  Session     Session[]
+  lastLogin   DateTime?        @default(now())
+  createdAt   DateTime         @default(now())
 }
 
 model Template {
@@ -37,9 +37,9 @@ model Template {
   title       String
   description String
   authorId    Int
-  author      User       @relation(fields: [authorId], references: [id])
+  author      User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
   fid         Int
-  form        Form       @relation(fields: [fid], references: [id])
+  form        Form       @relation(fields: [fid], references: [id], onDelete: Cascade)
   likes       Like[]
   comments    Comments[]
   tags        Tags[]
@@ -48,21 +48,21 @@ model Template {
 model Like {
   id       Int      @id @default(autoincrement())
   tid      Int
-  template Template @relation(fields: [tid], references: [id])
+  template Template @relation(fields: [tid], references: [id], onDelete: Cascade)
   value    Boolean
 }
 
 model Comments {
   id       Int      @id @default(autoincrement())
   tid      Int
-  template Template @relation(fields: [tid], references: [id])
+  template Template @relation(fields: [tid], references: [id], onDelete: Cascade)
   text     String
 }
 
 model Tags {
   id       Int      @id @default(autoincrement())
   tid      Int
-  template Template @relation(fields: [tid], references: [id])
+  template Template @relation(fields: [tid], references: [id], onDelete: Cascade)
   text     String
 }
 
@@ -72,7 +72,7 @@ model Form {
   title       String
   description String
   image       String?
-  user        User             @relation(fields: [uid], references: [id])
+  user        User             @relation(fields: [uid], references: [id], onDelete: Cascade)
   createdAt   DateTime         @default(now())
   updatedAt   DateTime         @updatedAt
   elements    Element[]
@@ -87,7 +87,7 @@ model Element {
   index      Int
   fid        Int
   question   String
-  form       Form      @relation(fields: [fid], references: [id])
+  form       Form      @relation(fields: [fid], references: [id], onDelete: Cascade)
   required   Boolean   @default(false)
   fieldCount Int
   text1      String?
@@ -110,50 +110,16 @@ model Answers {
   text2     String?
   text3     String?
   text4     String?
-  form      Form    @relation(fields: [fid], references: [id])
-  user      User    @relation(fields: [uid], references: [id])
-  element   Element @relation(fields: [eid], references: [id])
+  form      Form    @relation(fields: [fid], references: [id], onDelete: Cascade)
+  user      User    @relation(fields: [uid], references: [id], onDelete: Cascade)
+  element   Element @relation(fields: [eid], references: [id], onDelete: Cascade)
 }
 
 model FormPermission {
   id   Int      @id @default(autoincrement())
   fid  Int
   uid  Int
-  form Form     @relation(fields: [fid], references: [id])
-  user User     @relation(fields: [uid], references: [id])
+  form Form     @relation(fields: [fid], references: [id], onDelete: Cascade)
+  user User     @relation(fields: [uid], references: [id], onDelete: Cascade)
   role FormRole
-}
-
-model Account {
-  id                Int     @id @default(autoincrement())
-  userId            Int
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           Int      @id @default(autoincrement())
-  sessionToken String   @unique
-  userId       Int
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model VerificationToken {
-  identifier String
-  token      String   @unique
-  expires    DateTime
-
-  @@unique([identifier, token])
 }

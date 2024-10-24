@@ -35,7 +35,6 @@ function QuestionBox({
   const debouncedQuestion = useDebounce(question);
   const [type, setType] = useState(1);
   const [isRequired, setIsRequired] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(index);
   const [fields, setFields] = useState([{ id: 1 }]);
   const [text1, setText1] = useState("");
   const [text2, setText2] = useState("");
@@ -44,7 +43,7 @@ function QuestionBox({
 
   useEffect(() => {
     handleUpdate({
-      index: currentIndex,
+      index: index,
       question: debouncedQuestion,
       text1,
       text2,
@@ -54,16 +53,7 @@ function QuestionBox({
       fieldCount: fields.length,
       required: isRequired,
     });
-  }, [
-    currentIndex,
-    debouncedQuestion,
-    type,
-    text1,
-    text2,
-    text3,
-    text4,
-    isRequired,
-  ]);
+  }, [index, debouncedQuestion, type, text1, text2, text3, text4, isRequired]);
 
   const handleChange = (event: SelectChangeEvent) => {
     setType(Number(event.target.value));

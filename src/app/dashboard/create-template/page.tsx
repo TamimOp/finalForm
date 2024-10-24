@@ -25,7 +25,7 @@ const CreateTemplate = () => {
       const res = await fetch("/api/forms/create", {
         method: "POST",
         body: JSON.stringify({
-          title: title === "" ? title : "Untitled",
+          title: title === "" ? "Untitled" : title,
           description,
           elements,
         }),
