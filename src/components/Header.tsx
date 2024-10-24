@@ -24,6 +24,11 @@ export const Header = () => {
     setAnchorEl(null);
   };
 
+  const handleSettings = () => {
+    setAnchorEl(null);
+    router.push("/dashboard/admin-panel");
+  };
+
   // Handle navigating to the login page
   const handleLoginClick = () => {
     setAnchorEl(null); // Close the menu
@@ -95,7 +100,7 @@ export const Header = () => {
             }}
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>Settings</MenuItem>
+            <MenuItem onClick={handleSettings}>Settings</MenuItem>
             {/* Show Login or Logout based on login state */}
             {user ? (
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
