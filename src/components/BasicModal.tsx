@@ -4,6 +4,8 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import { useParams } from "next/navigation";
+import { TextField } from "@mui/material";
+import SelectButton from "./SelectButton";
 
 const style = {
   position: "absolute",
@@ -35,12 +37,12 @@ export default function BasicModal() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={style} className="flex flex-col gap-8">
+          <TextField id="demo-helper-text-misaligned-no-helper" label="Email" />
+          <h1>Selected Email</h1>
+          <SelectButton />
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Link
-          </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-            {`/dashboard/forms/${fid}`}
+            Link: {`/dashboard/forms/${fid}`}
           </Typography>
         </Box>
       </Modal>

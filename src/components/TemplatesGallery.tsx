@@ -11,6 +11,10 @@ const TemplatesGallery = () => {
   const handleBlankFormClick = () => {
     router.push("/dashboard/create-template");
   };
+  const handleTemplateClick = () => {
+    router.push(`/dashboard/forms/edit`);
+  };
+
   return (
     <div className="bg-gray-100 py-4 lg:py-16">
       <div className="max-w-[1104px] mx-auto">
@@ -32,6 +36,9 @@ const TemplatesGallery = () => {
               <p>Blank Form</p>
               <p>𒀱</p>
             </div>
+          </Button>
+          <Button variant="outlined" onClick={handleTemplateClick}>
+            <div className="flex flex-col gap-11 py-10 px-5"></div>
           </Button>
         </div>
       </div>

@@ -29,7 +29,7 @@ const FilledFormsTab = () => {
             key={form.id}
             className="border-2 border-black w-[180px] h-[180px]"
           >
-            <a href={`/dashboard/forms/${form.id}`}>{form.title}</a>
+            <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
           </li>
         ))}
       </ul>

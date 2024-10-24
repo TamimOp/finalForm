@@ -22,12 +22,12 @@ const formElement = async (uid: string | number) => {
 
 export async function GET(
   req: NextRequest,
-  params: { params: { dRoute: string } }
+  params: { params: { id: string } }
 ) {
   return genericMethod(
     req,
     "GET",
-    async () => formElement(params.params.dRoute),
+    async () => formElement(params.params.id),
     "Error getting forms",
     false
   );
