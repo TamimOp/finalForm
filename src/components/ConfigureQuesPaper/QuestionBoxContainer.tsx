@@ -1,22 +1,22 @@
 "use client";
 
 import useDebounce from "@/app/hooks/useDeounce";
+import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import AddIcon from "@mui/icons-material/Add";
+import ClearIcon from "@mui/icons-material/Clear";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import Box from "@mui/material/Box";
 import Checkbox from "@mui/material/Checkbox";
 import Fab from "@mui/material/Fab";
 import FormControl from "@mui/material/FormControl";
+import FormControlLabel from "@mui/material/FormControlLabel";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Switch from "@mui/material/Switch";
 import TextField from "@mui/material/TextField";
-import React, { useEffect, useState } from "react";
-import ClearIcon from "@mui/icons-material/Clear";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { useEffect, useState } from "react";
 
 const label = { inputProps: { "aria-label": "Checkbox demo" } };
 
@@ -51,6 +51,7 @@ function QuestionBox({
       text3,
       text4,
       type,
+      fieldCount: fields.length,
       required: isRequired,
     });
   }, [
@@ -235,6 +236,11 @@ export default function QuestionBoxContainer({ setElements }: any) {
     });
   };
 
+  const handleDelete = (index: number) => {
+    setElements((prev: any) => prev.filter((o: any) => o.index !== index));
+    deleteSection(index);
+  };
+
   const onDragEnd = (result: any) => {
     const { destination, source } = result;
 
@@ -250,6 +256,15 @@ export default function QuestionBoxContainer({ setElements }: any) {
     const reorderedSections = Array.from(sections);
     const [moved] = reorderedSections.splice(source.index, 1);
     reorderedSections.splice(destination.index, 0, moved);
+
+    setElements((prev: any) => {
+      const newElements = prev.map((o: any, i: number) => {
+        o.index = reorderedSections[i];
+        return o;
+      });
+      return newElements;
+    });
+
     setSections(reorderedSections);
   };
 
@@ -273,7 +288,7 @@ export default function QuestionBoxContainer({ setElements }: any) {
                     <div ref={provided.innerRef} {...provided.draggableProps}>
                       <QuestionBox
                         index={index}
-                        handleDelete={deleteSection}
+                        handleDelete={handleDelete}
                         handleUpdate={handleUpdate}
                         provided={provided}
                       />

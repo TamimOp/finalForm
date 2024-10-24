@@ -82,29 +82,37 @@ model Form {
 }
 
 model Element {
-  id       Int       @id @default(autoincrement())
-  type     Int
-  index    Int
-  fid      Int
-  question String
-  form     Form      @relation(fields: [fid], references: [id])
-  required Boolean   @default(false)
-  text1    String?
-  text2    String?
-  text3    String?
-  text4    String?
-  Answers  Answers[]
+  id         Int       @id @default(autoincrement())
+  type       Int
+  index      Int
+  fid        Int
+  question   String
+  form       Form      @relation(fields: [fid], references: [id])
+  required   Boolean   @default(false)
+  fieldCount Int
+  text1      String?
+  text2      String?
+  text3      String?
+  text4      String?
+  Answers    Answers[]
 }
 
 model Answers {
-  id       Int     @id @default(autoincrement())
-  fid      Int
-  uid      Int
-  eid      Int
-  selected Int?
-  form     Form    @relation(fields: [fid], references: [id])
-  user     User    @relation(fields: [uid], references: [id])
-  element  Element @relation(fields: [eid], references: [id])
+  id        Int     @id @default(autoincrement())
+  fid       Int
+  uid       Int
+  eid       Int
+  selected1 Int?
+  selected2 Int?
+  selected3 Int?
+  selected4 Int?
+  text1     String?
+  text2     String?
+  text3     String?
+  text4     String?
+  form      Form    @relation(fields: [fid], references: [id])
+  user      User    @relation(fields: [uid], references: [id])
+  element   Element @relation(fields: [eid], references: [id])
 }
 
 model FormPermission {

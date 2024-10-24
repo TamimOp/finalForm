@@ -8,13 +8,13 @@ import { useRouter } from "next/navigation"; // Update to 'next/navigation'
 import { useState } from "react";
 
 const CreateTemplate = () => {
-  const [title, setTitle] = useState("");
+  const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [elements, setElements] = useState([]);
 
-  const router = useRouter(); // Using 'next/navigation' version
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,7 +24,11 @@ const CreateTemplate = () => {
     try {
       const res = await fetch("/api/forms/create", {
         method: "POST",
-        body: JSON.stringify({ title, description, elements }),
+        body: JSON.stringify({
+          title: title === "" ? title : "Untitled",
+          description,
+          elements,
+        }),
         headers: { "Content-Type": "application/json" },
       });
 
