@@ -25,11 +25,13 @@ function QuestionBox({
   handleDelete,
   handleUpdate,
   provided,
+  element = undefined,
 }: {
   index: number;
   handleDelete: (index: number) => void;
   handleUpdate: (item: any) => void;
   provided: any;
+  element?: any;
 }) {
   const [question, setQuestion] = useState("");
   const debouncedQuestion = useDebounce(question);
@@ -42,7 +44,26 @@ function QuestionBox({
   const [text4, setText4] = useState("");
 
   useEffect(() => {
-    handleUpdate({
+    if (element) {
+      setQuestion(element.question);
+      setType(element.type);
+      setFields(
+        Array.from({ length: element.fieldCount }, (_, i) => ({
+          id: i + 1,
+        }))
+      );
+
+      setText1(element?.text1 || "");
+      setText2(element?.text2 || "");
+      setText3(element?.text3 || "");
+      setText4(element?.text4 || "");
+
+      setIsRequired(element.required);
+    }
+  }, []);
+
+  useEffect(() => {
+    const item: any = {
       index: index,
       question: debouncedQuestion,
       text1,
@@ -52,7 +73,14 @@ function QuestionBox({
       type,
       fieldCount: fields.length,
       required: isRequired,
-    });
+    };
+
+    if (element) {
+      item.id = element.id;
+      item.fid = element.fid;
+    }
+
+    handleUpdate(item);
   }, [index, debouncedQuestion, type, text1, text2, text3, text4, isRequired]);
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -63,11 +91,41 @@ function QuestionBox({
   const addField = () => {
     if (fields.length < 4) {
       setFields([...fields, { id: fields.length + 1 }]);
+      if (element) {
+        handleUpdate({
+          index: index,
+          question: debouncedQuestion,
+          text1,
+          text2,
+          text3,
+          text4,
+          type,
+          fieldCount: fields.length + 1,
+          required: isRequired,
+          id: element.id,
+          fid: element.fid,
+        });
+      }
     }
   };
 
   const removeField = (id: number) => {
     setFields(fields.filter((field) => field.id !== id));
+    if (element) {
+      handleUpdate({
+        index: index,
+        question: debouncedQuestion,
+        text1,
+        text2,
+        text3,
+        text4,
+        type,
+        fieldCount: fields.length - 1,
+        required: isRequired,
+        id: element.id,
+        fid: element.fid,
+      });
+    }
   };
 
   const handleTextChange = (id: number, value: string) => {
@@ -207,8 +265,23 @@ function QuestionBox({
   );
 }
 
-export default function QuestionBoxContainer({ setElements }: any) {
-  const [sections, setSections] = useState<number[]>([1]);
+export default function QuestionBoxContainer({
+  setElements,
+  elements = undefined,
+}: any) {
+  const [sections, setSections] = useState<number[]>([0]);
+
+  useEffect(() => {
+    if (elements) {
+      const items = [];
+      for (let i = 0; i < elements.length; i++) {
+        items.push(elements[i].index);
+      }
+      setSections(items);
+
+      console.log(sections);
+    }
+  }, []);
 
   const addSection = () => {
     setSections((prev) => [...prev, prev.length + 1]);
@@ -281,6 +354,11 @@ export default function QuestionBoxContainer({ setElements }: any) {
                         handleDelete={handleDelete}
                         handleUpdate={handleUpdate}
                         provided={provided}
+                        element={
+                          (elements &&
+                            elements.find((o: any) => o.index === section)) ||
+                          undefined
+                        }
                       />
                     </div>
                   )}

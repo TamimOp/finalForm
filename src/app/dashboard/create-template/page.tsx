@@ -1,7 +1,6 @@
 "use client";
 
 import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
-import TabForm from "@/components/Tabs";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation"; // Update to 'next/navigation'
@@ -48,8 +47,6 @@ const CreateTemplate = () => {
 
   return (
     <>
-      <TabForm />
-
       <div className="bg-slate-100">
         <form className="container mx-auto px-4 py-8 flex flex-col gap-3 justify-center items-center ">
           <div className="flex flex-col gap-3 justify-center items-center">
