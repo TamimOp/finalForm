@@ -4,16 +4,13 @@ import UnfoldMoreSharpIcon from "@mui/icons-material/UnfoldMoreSharp";
 import { IconButton } from "@mui/material";
 import Button from "@mui/material/Button";
 import { useRouter } from "next/navigation";
+import TemplateCreationTab from "./TemplateCreationTab";
 
 const TemplatesGallery = () => {
   const router = useRouter();
 
   const handleBlankFormClick = () => {
     router.push("/dashboard/create-template");
-  };
-
-  const handleTemplateClick = () => {
-    router.push(`/dashboard/forms/edit`);
   };
 
   return (
@@ -38,8 +35,8 @@ const TemplatesGallery = () => {
               <p>𒀱</p>
             </div>
           </Button>
-          <Button variant="outlined" onClick={handleTemplateClick}>
-            <div className="flex flex-col gap-11 py-10 px-5"></div>
+          <Button variant="outlined">
+            <TemplateCreationTab />
           </Button>
         </div>
       </div>

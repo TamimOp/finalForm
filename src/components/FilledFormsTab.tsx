@@ -12,7 +12,7 @@ const FilledFormsTab = () => {
     const fetchFilledForms = async () => {
       try {
         const res = await fetch("/api/forms/get");
-        const data: FilledForm[] = await res.json(); // Ensure data matches the FilledForm[] type
+        const data: FilledForm[] = await res.json();
         setFilledForms(data);
       } catch (error) {
         console.error("Error fetching filled forms:", error);
@@ -27,7 +27,7 @@ const FilledFormsTab = () => {
         {filledForms.map((form) => (
           <li
             key={form.id}
-            className="border-2 border-black w-[180px] h-[180px]"
+            className="border-2 border-black w-[180px] h-[180px] p-4 items-center text-center rounded-sm"
           >
             <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
           </li>
