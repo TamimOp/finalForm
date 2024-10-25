@@ -11,8 +11,8 @@ function TabForm({ form }: any) {
     <div>
       <Tabs value={0} centered>
         <Tab label="Questions" />
-        <BasicModal form={form} />
         <Tab label="Responses" onClick={handleClick} />
+        <BasicModal form={form} />
       </Tabs>
     </div>
   );

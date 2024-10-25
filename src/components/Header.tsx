@@ -6,6 +6,7 @@ import { Avatar, IconButton, Menu, MenuItem } from "@mui/material";
 import Image from "next/image";
 import { useRouter } from "next/navigation"; // Import useRouter
 import React, { useState } from "react";
+import Link from "next/link";
 
 export const Header = () => {
   const user = useUserStore((state: any) => state.user);
@@ -14,12 +15,10 @@ export const Header = () => {
   const open = Boolean(anchorEl);
   const router = useRouter();
 
-  // Handle opening the menu
   const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
-  // Handle closing the menu
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -29,13 +28,11 @@ export const Header = () => {
     router.push("/dashboard/admin-panel");
   };
 
-  // Handle navigating to the login page
   const handleLoginClick = () => {
-    setAnchorEl(null); // Close the menu
-    router.push("/login"); // Navigate to the login page
+    setAnchorEl(null);
+    router.push("/login");
   };
 
-  // Handle logout functionality
   const handleLogout = async () => {
     await fetch("/api/auth/logout", {
       method: "POST",
@@ -54,13 +51,15 @@ export const Header = () => {
     <>
       <div className="flex justify-between items-center h-16 bg-main p-4">
         <div className="flex items-center">
-          <Image
-            src="/images/formLogo.png"
-            width={30}
-            height={30}
-            alt="no-image"
-            className="h-10 w-10"
-          />
+          <Link href="/dashboard">
+            <Image
+              src="/images/formLogo.png"
+              width={30}
+              height={30}
+              alt="Logo"
+              className="h-10 w-10 cursor-pointer"
+            />
+          </Link>
           <div className="text-textColor text-lg pl-2">FinalForms</div>
         </div>
 
@@ -80,12 +79,10 @@ export const Header = () => {
             <AppsIcon style={{ fontSize: "22px" }} />
           </IconButton>
 
-          {/* Avatar that opens a menu when clicked */}
           <IconButton onClick={handleMenuClick}>
             <Avatar />
           </IconButton>
 
-          {/* The dropdown menu */}
           <Menu
             anchorEl={anchorEl}
             open={open}
@@ -101,7 +98,6 @@ export const Header = () => {
           >
             <MenuItem onClick={handleClose}>Profile</MenuItem>
             <MenuItem onClick={handleSettings}>Settings</MenuItem>
-            {/* Show Login or Logout based on login state */}
             {user ? (
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
             ) : (
