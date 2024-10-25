@@ -191,6 +191,7 @@ function QuestionBox({
             <div key={field.id} className="flex items-center gap-2 mt-2">
               {type === 1 && (
                 <TextField
+                  disabled
                   id="standard-basic"
                   label="Short Answer"
                   variant="standard"
@@ -199,6 +200,7 @@ function QuestionBox({
               )}
               {type === 2 && (
                 <TextField
+                  disabled
                   id="standard-basic"
                   label="Paragraph"
                   variant="standard"
@@ -209,6 +211,7 @@ function QuestionBox({
               )}
               {type === 3 && (
                 <TextField
+                  disabled
                   id="standard-basic"
                   label="Integer"
                   type="number"
