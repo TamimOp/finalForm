@@ -3,7 +3,7 @@
 import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
 import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useRouter } from "next/navigation"; // Update to 'next/navigation'
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 const CreateTemplate = () => {

@@ -4,8 +4,23 @@ import { useTheme } from "@mui/material/styles";
 import AppBar from "@mui/material/AppBar";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
-import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+
+interface Answer {
+  fid: number;
+  uid: number;
+  eid: number;
+  selected1?: number;
+  selected2?: number;
+  selected3?: number;
+  selected4?: number;
+  text1?: string;
+  text2?: string;
+  text3?: string;
+  text4?: string;
+}
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,7 +42,7 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <Box>{children}</Box>
         </Box>
       )}
     </div>
@@ -40,14 +55,32 @@ function a11yProps(index: number) {
     "aria-controls": `full-width-tabpanel-${index}`,
   };
 }
-
 export default function FullWidthTabs() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [responses, setResponses] = useState<any>();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
   };
+
+  const params = useParams();
+  const fid = params.fid;
+  console.log(responses);
+  useEffect(() => {
+    const fetchResponses = async () => {
+      try {
+        const res = await fetch(`/api/forms/${fid}/get`);
+        const data = await res.json();
+
+        setResponses(data.groupedAnswersByUid);
+      } catch (error) {
+        console.error("Error fetching responses:", error);
+      }
+    };
+
+    fetchResponses();
+  }, [fid]);
 
   return (
     <>
@@ -56,7 +89,7 @@ export default function FullWidthTabs() {
       </div>
 
       <div className="flex justify-center items-center">
-        <Box sx={{ bgcolor: "background.paper", width: 900 }}>
+        <Box sx={{ bgcolor: "background.paper", width: 1200 }}>
           <AppBar position="static">
             <Tabs
               value={value}
@@ -66,15 +99,22 @@ export default function FullWidthTabs() {
               variant="fullWidth"
               aria-label="full width tabs example"
             >
-              <Tab label="Summury" {...a11yProps(0)} />
-              <Tab label="Individual" {...a11yProps(1)} />
+              <Tab label="Individual" {...a11yProps(0)} />
+              <Tab label="Summury" {...a11yProps(1)} />
             </Tabs>
           </AppBar>
           <TabPanel value={value} index={0} dir={theme.direction}>
-            Summury
+            <ul>
+              {responses &&
+                Object.keys(responses).map((key) =>
+                  responses[key].map((response: Answer) => {
+                    return <li key={response.uid}>{response.text1}</li>;
+                  })
+                )}
+            </ul>
           </TabPanel>
           <TabPanel value={value} index={1} dir={theme.direction}>
-            Individual
+            Summury
           </TabPanel>
         </Box>
       </div>

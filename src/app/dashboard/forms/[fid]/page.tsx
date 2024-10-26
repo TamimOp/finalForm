@@ -4,20 +4,6 @@ import { TextField } from "@mui/material";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface Answer {
-  fid: number;
-  uid: number;
-  eid: number;
-  selected1?: number;
-  selected2?: number;
-  selected3?: number;
-  selected4?: number;
-  text1?: string;
-  text2?: string;
-  text3?: string;
-  text4?: string;
-}
-
 type Element = {
   id: number;
   type: number;
@@ -51,7 +37,6 @@ function Forms() {
   const params = useParams();
   const fid = params.fid;
   const [formData, setFormData] = useState<TemplateData | null>(null);
-  const [answers, setAnswers] = useState<Answer[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 

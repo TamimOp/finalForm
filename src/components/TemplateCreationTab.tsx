@@ -12,8 +12,8 @@ const TemplateCreationTab = () => {
     const fetchFilledTemplates = async () => {
       try {
         const res = await fetch("/api/forms/get");
-        const data: FilledTemplate[] = await res.json();
-        setFilledTemplates(data);
+        const data = await res.json();
+        if (!data.message) setFilledTemplates(data);
       } catch (error) {
         console.error("Error fetching filled forms:", error);
       }
@@ -24,11 +24,12 @@ const TemplateCreationTab = () => {
   return (
     <div>
       <ul className="mt-4 flex flex-wrap gap-6">
-        {filledTemplates.map((form) => (
-          <li key={form.id} className="w-[160px] h-[180px]">
-            <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
-          </li>
-        ))}
+        {filledTemplates &&
+          filledTemplates?.map((form) => (
+            <li key={form.id} className="w-[160px] h-[180px]">
+              <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
+            </li>
+          ))}
       </ul>
     </div>
   );

@@ -12,8 +12,8 @@ const FilledFormsTab = () => {
     const fetchFilledForms = async () => {
       try {
         const res = await fetch("/api/forms/get");
-        const data: FilledForm[] = await res.json();
-        setFilledForms(data);
+        const data = await res.json();
+        if (!data.message) setFilledForms(data);
       } catch (error) {
         console.error("Error fetching filled forms:", error);
       }
