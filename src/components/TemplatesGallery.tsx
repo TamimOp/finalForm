@@ -35,9 +35,7 @@ const TemplatesGallery = () => {
               <p>𒀱</p>
             </div>
           </Button>
-          <Button variant="outlined">
-            <TemplateCreationTab />
-          </Button>
+          <TemplateCreationTab />
         </div>
       </div>
     </div>

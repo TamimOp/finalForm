@@ -23,11 +23,19 @@ const TemplateCreationTab = () => {
 
   return (
     <div>
-      <ul className="mt-4 flex flex-wrap gap-6">
+      <ul className="flex flex-wrap gap-6">
         {filledTemplates &&
           filledTemplates?.map((form) => (
-            <li key={form.id} className="w-[160px] h-[180px]">
-              <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
+            <li
+              key={form.id}
+              className="border-2 border-blue-500 w-[180px] h-[220px] p-4 items-center text-center rounded-sm"
+            >
+              <a
+                href={`/dashboard/forms/${form.id}/edit`}
+                className="text-blue-600"
+              >
+                {form.title}
+              </a>
             </li>
           ))}
       </ul>

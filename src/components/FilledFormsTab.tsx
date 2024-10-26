@@ -27,7 +27,7 @@ const FilledFormsTab = () => {
         {filledForms.map((form) => (
           <li
             key={form.id}
-            className="border-2 border-black w-[180px] h-[180px] p-4 items-center text-center rounded-sm"
+            className="border-2 border-black w-[180px] h-[220px] p-4 items-center text-center rounded-sm"
           >
             <a href={`/dashboard/forms/${form.id}/edit`}>{form.title}</a>
           </li>

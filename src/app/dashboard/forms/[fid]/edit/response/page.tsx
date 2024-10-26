@@ -108,7 +108,15 @@ export default function FullWidthTabs() {
               {responses &&
                 Object.keys(responses).map((key) =>
                   responses[key].map((response: Answer) => {
-                    return <li key={response.uid}>{response.text1}</li>;
+                    return (
+                      <li
+                        className="bg-slate-200 p-4 rounded-sm m-2"
+                        key={response.uid}
+                      >
+                        <h1>USER {response.uid}</h1>
+                        Answer {response.eid}: {response.text1}
+                      </li>
+                    );
                   })
                 )}
             </ul>
