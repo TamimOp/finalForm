@@ -1,5 +1,5 @@
 import { genericResponse } from "@/utils/api/routeTemplate";
-import { NextRequest } from "next/server"; // For proper Next.js types
+import { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
   if (req.method !== "POST") {

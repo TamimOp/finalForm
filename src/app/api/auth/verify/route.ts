@@ -1,7 +1,7 @@
 import { genericResponse } from "@/utils/api/routeTemplate";
 import { parse } from "cookie";
 import jwt from "jsonwebtoken";
-import { NextRequest } from "next/server"; // Importing the type for Next.js requests
+import { NextRequest } from "next/server";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret_key";
 

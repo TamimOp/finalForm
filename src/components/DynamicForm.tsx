@@ -24,6 +24,7 @@ interface DynamicFormProps {
 const DynamicForm = ({ elements }: DynamicFormProps) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [submitLoading, setSubmitLoading] = useState(true);
   const [formData, setFormData] = useState<any[]>(
     elements.map((e: Element) => ({
       fid: e.fid,
@@ -88,6 +89,7 @@ const DynamicForm = ({ elements }: DynamicFormProps) => {
     console.log("Form submitted with data:", formData);
     setLoading(true);
     setError(null);
+    setSubmitLoading(true);
 
     try {
       const res = await fetch("/api/forms/submit-answer", {
@@ -106,6 +108,7 @@ const DynamicForm = ({ elements }: DynamicFormProps) => {
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
+      setSubmitLoading(false);
     }
   };
 
@@ -189,7 +192,7 @@ const DynamicForm = ({ elements }: DynamicFormProps) => {
         </div>
       ))}
       <Button type="submit" variant="contained" color="primary">
-        Submit
+        {submitLoading ? "Sibmit" : "Submited"}
       </Button>
     </form>
   );

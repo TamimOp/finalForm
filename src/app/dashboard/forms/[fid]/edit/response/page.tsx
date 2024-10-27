@@ -6,7 +6,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Box from "@mui/material/Box";
 import { useState, useEffect } from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import { useUserStore } from "@/store/user-store";
 
 interface Answer {
   fid: number;
@@ -56,6 +57,8 @@ function a11yProps(index: number) {
   };
 }
 export default function FullWidthTabs() {
+  const router = useRouter();
+  const user = useUserStore((state: any) => state.user);
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [responses, setResponses] = useState<any>();
@@ -84,8 +87,8 @@ export default function FullWidthTabs() {
 
   return (
     <>
-      <div className="m-10">
-        <h1>Responses</h1>
+      <div className="m-10 items-center">
+        <h1 className="text-black bold text-center text-lg">All Responses</h1>
       </div>
 
       <div className="flex justify-center items-center">
@@ -107,14 +110,14 @@ export default function FullWidthTabs() {
             <ul>
               {responses &&
                 Object.keys(responses).map((key) =>
-                  responses[key].map((response: Answer) => {
+                  responses[key].map((response: Answer, index: number) => {
                     return (
                       <li
                         className="bg-slate-200 p-4 rounded-sm m-2"
-                        key={response.uid}
+                        key={response.eid}
                       >
                         <h1>USER {response.uid}</h1>
-                        Answer {response.eid}: {response.text1}
+                        Answer {index + 1}: {response.text1}
                       </li>
                     );
                   })

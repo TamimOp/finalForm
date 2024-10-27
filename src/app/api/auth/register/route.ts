@@ -3,7 +3,7 @@ import { generateToken } from "@/utils/api/jwt";
 import { genericResponse } from "@/utils/api/routeTemplate";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { NextRequest } from "next/server"; // Import the correct type for the request
+import { NextRequest } from "next/server";
 
 const prisma = new PrismaClient();
 

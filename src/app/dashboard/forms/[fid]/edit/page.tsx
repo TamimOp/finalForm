@@ -163,7 +163,7 @@ export default function Edit() {
           disabled={fetchLoading}
           className="items-start"
         >
-          {updateLoading ? "Update Template" : "Updating..."}
+          {updateLoading ? "Update Template" : "Updated"}
         </Button>
       </form>
     </div>
