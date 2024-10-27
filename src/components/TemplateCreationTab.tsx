@@ -11,7 +11,7 @@ const TemplateCreationTab = () => {
   useEffect(() => {
     const fetchFilledTemplates = async () => {
       try {
-        const res = await fetch("/api/forms/get");
+        const res = await fetch("/api/templates/get");
         const data = await res.json();
         if (!data.message) setFilledTemplates(data);
       } catch (error) {

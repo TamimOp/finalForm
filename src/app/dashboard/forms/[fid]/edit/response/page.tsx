@@ -1,171 +1,131 @@
 "use client";
-import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
-import TabForm from "@/components/Tabs";
-import { useUserStore } from "@/store/user-store";
-import { TextField } from "@mui/material";
-import Button from "@mui/material/Button";
-import { useParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import * as React from "react";
+import { useTheme } from "@mui/material/styles";
+import AppBar from "@mui/material/AppBar";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
+import Box from "@mui/material/Box";
+import { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
 
-type Element = {
-  id: number;
-  type: number;
-  index: number;
+interface Answer {
   fid: number;
-  question: string;
-  required: boolean;
-  fieldCount: number;
-  text1: string;
-  text2: string;
-  text3: string;
-  text4: string;
-};
-
-type Form = {
-  id: number;
   uid: number;
-  title: string;
-  description: string;
-  image: string | null;
-  createdAt: string;
-  updatedAt: string;
-};
+  eid: number;
+  selected1?: number;
+  selected2?: number;
+  selected3?: number;
+  selected4?: number;
+  text1?: string;
+  text2?: string;
+  text3?: string;
+  text4?: string;
+}
 
-export default function Edit() {
-  const router = useRouter();
-  const user = useUserStore((state: any) => state.user);
-  const params = useParams();
-  const fid = params.fid;
-  const [form, setForm] = useState<any>(null);
-  const [title, setTitle] = useState<string>("");
-  const [description, setDescription] = useState("");
-  const [elements, setElements] = useState([]);
-  const [fetchLoading, setFetchLoading] = useState(true);
-  const [updateLoading, setUpdateLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface TabPanelProps {
+  children?: React.ReactNode;
+  dir?: string;
+  index: number;
+  value: number;
+}
 
-  useEffect(() => {
-    const fetchTemplates = async () => {
-      setFetchLoading(true);
-
-      try {
-        const res = await fetch(`/api/forms/${fid}`);
-        const data = await res.json();
-
-        if (data && data.msg) {
-          setError(data.msg);
-          setFetchLoading(false);
-          return;
-        }
-
-        if (data && data.data) {
-          if (data.data.form.uid !== user.id) {
-            router.push("/dashboard");
-          }
-
-          setForm(data.data.form);
-
-          setTitle(data.data.form.title);
-          setDescription(data.data.form.description);
-
-          const sortedElements = data.data.elements.sort(
-            (a: Element, b: Element) => a.index - b.index
-          );
-
-          setElements(sortedElements);
-        } else {
-          console.error("Unexpected response structure:", data);
-        }
-      } catch (error) {
-        console.error("Error fetching templates:", error);
-      } finally {
-        setFetchLoading(false);
-      }
-    };
-    fetchTemplates();
-  }, [fid]);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setUpdateLoading(true);
-    setError(null);
-
-    try {
-      const res = await fetch("/api/forms/update", {
-        method: "POST",
-        body: JSON.stringify({
-          fid,
-          title: title === "" ? "Untitled" : title,
-          description,
-          elements,
-        }),
-        headers: { "Content-Type": "application/json" },
-      });
-
-      if (res.ok) {
-        const data = await res.json();
-      } else {
-        const errorData = await res.json();
-        setError(errorData.message || "Failed to create template");
-      }
-    } catch {
-      setError("An error occurred. Please try again.");
-    } finally {
-      setUpdateLoading(false);
-    }
-  };
-
-  if (fetchLoading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <p className="text-red-500 mb-4 items-start">{error}</p>;
-  }
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
 
   return (
-    <div className="bg-slate-100">
-      <form className="container mx-auto px-4 py-8 flex flex-col gap-3 justify-center items-center ">
-        <TabForm form={form} />
-        <div className="flex flex-col gap-3 justify-center items-center">
-          <TextField
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            required
-            disabled={fetchLoading}
-            label="Template Title"
-            variant="filled"
-            className="w-[700px]"
-          />
-
-          <TextField
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            disabled={fetchLoading}
-            label="Description"
-            variant="filled"
-            size="small"
-            className="w-[700px]"
-          />
-        </div>
-
-        <div className="container item-center w-[700px]">
-          {!fetchLoading && (
-            <QuestionBoxContainer
-              setElements={setElements}
-              elements={elements}
-            />
-          )}
-        </div>
-        <Button
-          onClick={handleSubmit}
-          variant="contained"
-          disabled={fetchLoading}
-          className="items-start"
-        >
-          {updateLoading ? "Update Template" : "Updating..."}
-        </Button>
-      </form>
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`full-width-tabpanel-${index}`}
+      aria-labelledby={`full-width-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          <Box>{children}</Box>
+        </Box>
+      )}
     </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `full-width-tab-${index}`,
+    "aria-controls": `full-width-tabpanel-${index}`,
+  };
+}
+export default function FullWidthTabs() {
+  const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+  const [responses, setResponses] = useState<any>();
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
+
+  const params = useParams();
+  const fid = params.fid;
+  console.log(responses);
+  useEffect(() => {
+    const fetchResponses = async () => {
+      try {
+        const res = await fetch(`/api/forms/${fid}/get`);
+        const data = await res.json();
+
+        setResponses(data.groupedAnswersByUid);
+      } catch (error) {
+        console.error("Error fetching responses:", error);
+      }
+    };
+
+    fetchResponses();
+  }, [fid]);
+
+  return (
+    <>
+      <div className="m-10">
+        <h1>Responses</h1>
+      </div>
+
+      <div className="flex justify-center items-center">
+        <Box sx={{ bgcolor: "background.paper", width: 1200 }}>
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              indicatorColor="secondary"
+              textColor="inherit"
+              variant="fullWidth"
+              aria-label="full width tabs example"
+            >
+              <Tab label="Individual" {...a11yProps(0)} />
+              <Tab label="Summury" {...a11yProps(1)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0} dir={theme.direction}>
+            <ul>
+              {responses &&
+                Object.keys(responses).map((key) =>
+                  responses[key].map((response: Answer) => {
+                    return (
+                      <li
+                        className="bg-slate-200 p-4 rounded-sm m-2"
+                        key={response.uid}
+                      >
+                        <h1>USER {response.uid}</h1>
+                        Answer {response.eid}: {response.text1}
+                      </li>
+                    );
+                  })
+                )}
+            </ul>
+          </TabPanel>
+          <TabPanel value={value} index={1} dir={theme.direction}>
+            Summury
+          </TabPanel>
+        </Box>
+      </div>
+    </>
   );
 }

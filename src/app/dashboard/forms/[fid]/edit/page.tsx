@@ -1,11 +1,11 @@
 "use client";
-import { TextField } from "@mui/material";
-import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
-
 import QuestionBoxContainer from "@/components/ConfigureQuesPaper/QuestionBoxContainer";
 import TabForm from "@/components/Tabs";
+import { useUserStore } from "@/store/user-store";
+import { TextField } from "@mui/material";
 import Button from "@mui/material/Button";
+import { useParams, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 type Element = {
   id: number;
@@ -32,6 +32,8 @@ type Form = {
 };
 
 export default function Edit() {
+  const router = useRouter();
+  const user = useUserStore((state: any) => state.user);
   const params = useParams();
   const fid = params.fid;
   const [form, setForm] = useState<any>(null);
@@ -57,6 +59,10 @@ export default function Edit() {
         }
 
         if (data && data.data) {
+          if (data.data.form.uid !== user.id) {
+            router.push("/dashboard");
+          }
+
           setForm(data.data.form);
 
           setTitle(data.data.form.title);

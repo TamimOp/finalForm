@@ -25,13 +25,12 @@ export async function GET(req: Request) {
       throw new Error("Invalid token format");
     }
 
-    // Fetch all templates for the user with the id decoded from the token
     const userTemplates = await prisma.template.findMany({
       where: {
         authorId: decoded.id,
       },
       include: {
-        form: true, // Optionally include the form related to the template
+        form: true,
       },
     });
 
