@@ -31,7 +31,7 @@ const TemplateCreationTab = () => {
               className="border-2 border-blue-500 w-[180px] h-[220px] p-4 items-center text-center rounded-sm"
             >
               <a
-                href={`/dashboard/forms/${form.id}/edit`}
+                href={`/dashboard/templates/${form.id}`}
                 className="text-blue-600"
               >
                 {form.title}
