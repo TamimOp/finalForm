@@ -87,7 +87,7 @@ export default function Edit() {
     setError(null);
 
     try {
-      const res = await fetch("/api/forms/update", {
+      const res = await fetch("/api/templates/url", {
         method: "POST",
         body: JSON.stringify({
           fid,
@@ -159,7 +159,7 @@ export default function Edit() {
           disabled={fetchLoading}
           className="items-start"
         >
-          {updateLoading ? "Update Template" : "Updating..."}
+          {updateLoading ? "Create Template" : "Created"}
         </Button>
       </form>
     </div>
