@@ -24,9 +24,13 @@ export default function BasicModal({ form }: any) {
   const [email, setEmail] = React.useState("");
   const [share, setShare] = React.useState(-1);
   const [open, setOpen] = React.useState(false);
+  const [copyMessage, setCopyMessage] = React.useState<string | null>(null);
 
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleClose = () => {
+    setOpen(false);
+    setCopyMessage(null);
+  };
 
   useEffect(() => {
     if (form) {
@@ -38,6 +42,7 @@ export default function BasicModal({ form }: any) {
     setLoading(true);
     setError(null);
 
+    const link = `https://final-form-five.vercel.app/dashboard/forms/${form.id}`;
     try {
       const res = await fetch(`/api/forms/${form.id}/share`, {
         method: "POST",
@@ -52,12 +57,18 @@ export default function BasicModal({ form }: any) {
       if (!res.ok) {
         const errorData = await res.json();
         setError(errorData.message || "Failed to update form permission");
+      } else {
+        await navigator.clipboard.writeText(link);
+        setCopyMessage("copied");
+
+        setTimeout(() => {
+          handleClose();
+        }, 2000);
       }
     } catch {
       setError("An error occurred. Please try again.");
     } finally {
       setLoading(false);
-      handleClose();
     }
   };
 
@@ -95,8 +106,14 @@ export default function BasicModal({ form }: any) {
           <h1>Selected Email</h1>
           <SelectButton share={share} setShare={setShare} />
           <Typography id="modal-modal-title" variant="h6" component="h2">
-            Link: {`https://final-form-five.vercel.app/dashboard/${form.id}`}
+            Link:{" "}
+            {`https://final-form-five.vercel.app/dashboard/forms/${form.id}`}
           </Typography>
+          {copyMessage && (
+            <Typography variant="body2" color="green">
+              {copyMessage}
+            </Typography>
+          )}
           <div className="flex gap-2 justify-end">
             <Button onClick={handleClose}>Close</Button>
             <Button onClick={handleShare}>Share</Button>
